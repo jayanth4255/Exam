@@ -1,0 +1,106 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>TCS NQT Quiz</title>
+    <style>
+        body { font-family: Arial, sans-serif; text-align: center; }
+        .container { width: 60%; margin: auto; }
+        .question { margin: 20px 0; text-align: left; }
+        .timer { font-size: 20px; font-weight: bold; margin-bottom: 20px; color: red; }
+        button { margin-top: 20px; padding: 10px; font-size: 16px; cursor: pointer; }
+    </style>
+</head>
+<body>
+    <h1>TCS NQT Mixed Topic Quiz</h1>
+    <div class="timer" id="timer">Time Left: 40:00</div>
+    <div class="container" id="quiz-container"></div>
+    <button onclick="submitQuiz()">Submit</button>
+
+    <script>
+        const questions = [
+            // Simple Interest & Compound Interest
+            { q: "A sum of ₹5000 earns 5% SI per annum for 3 years. What is the interest?", options: ["₹750", "₹800", "₹850", "₹900"], answer: "₹750" },
+            { q: "A sum of ₹2000 becomes ₹2420 in 2 years at CI. Find the rate.", options: ["10%", "12%", "15%", "8%"], answer: "10%" },
+            { q: "A sum triples itself in 8 years at SI. Find the rate.", options: ["25%", "20%", "18%", "30%"], answer: "25%" },
+            { q: "₹15000 is invested at 8% CI. Find the amount after 3 years.", options: ["₹18900", "₹19000", "₹19400", "₹19500"], answer: "₹18900" },
+            { q: "The difference between SI and CI for 2 years on ₹5000 at 10% is?", options: ["₹50", "₹100", "₹150", "₹200"], answer: "₹50" },
+            { q: "A sum earns ₹8800 SI in 4 years at 11% per annum. Find the principal.", options: ["₹18000", "₹20000", "₹22000", "₹24000"], answer: "₹20000" },
+            { q: "₹5000 becomes ₹6050 in 2 years at CI. Find the rate.", options: ["8%", "10%", "12%", "15%"], answer: "10%" },
+            { q: "A sum is invested at 10% per annum CI, compounded annually. It becomes ₹1331 in 3 years. Find the principal.", options: ["₹1000", "₹1100", "₹1200", "₹1300"], answer: "₹1000" },
+            { q: "The SI on ₹7000 at 6% for 5 years is?", options: ["₹2100", "₹2200", "₹2300", "₹2500"], answer: "₹2100" },
+            { q: "Find the CI on ₹8000 for 2 years at 5% per annum, compounded annually.", options: ["₹820", "₹850", "₹810", "₹870"], answer: "₹820" },
+            { q: "₹5000 is invested at SI of 8% per annum. Find the total amount after 4 years.", options: ["₹6600", "₹6400", "₹6200", "₹6800"], answer: "₹6600" },
+            { q: "A sum earns ₹1620 SI in 3 years at 9% per annum. Find the principal.", options: ["₹6000", "₹6200", "₹6300", "₹6400"], answer: "₹6000" },
+            { q: "A sum triples itself in 6 years at CI. Find the rate.", options: ["20%", "22%", "25%", "30%"], answer: "25%" },
+            { q: "₹6000 is invested at SI of 10% per annum. Find the interest after 5 years.", options: ["₹3000", "₹2500", "₹3200", "₹3500"], answer: "₹3000" },
+
+            // Profit & Loss
+            { q: "A trader marks his goods 25% above CP and gives 10% discount. Find the gain%.", options: ["12.5%", "15%", "10%", "20%"], answer: "12.5%" },
+            { q: "A shopkeeper marks an article at ₹800 and sells at ₹640. Find the discount%.", options: ["10%", "15%", "20%", "25%"], answer: "20%" },
+            { q: "An article is bought for ₹450 and sold at ₹540. Find the profit%.", options: ["15%", "18%", "20%", "25%"], answer: "20%" },
+            { q: "A shopkeeper sells a ₹500 article at ₹400. Find the loss%.", options: ["10%", "20%", "15%", "12%"], answer: "20%" },
+            { q: "A dealer sells a bike for ₹24000, making a 20% profit. Find the CP.", options: ["₹20000", "₹22000", "₹23000", "₹25000"], answer: "₹20000" },
+            { q: "A shopkeeper gains 10% on an article sold for ₹5500. Find the CP.", options: ["₹5000", "₹5050", "₹5100", "₹5200"], answer: "₹5000" },
+            { q: "If an article is sold at ₹5400 after 10% discount, find MP.", options: ["₹5800", "₹6000", "₹6200", "₹6500"], answer: "₹6000" },
+            { q: "A person sells an item at 30% profit. If CP is ₹400, find SP.", options: ["₹500", "₹520", "₹530", "₹540"], answer: "₹520" },
+            { q: "An article is sold at 25% profit for ₹250. Find the CP.", options: ["₹200", "₹210", "₹220", "₹230"], answer: "₹200" },
+            { q: "A shopkeeper earns 5% profit on a ₹5000 TV. Find profit amount.", options: ["₹200", "₹250", "₹300", "₹350"], answer: "₹250" },
+
+            // Percentages
+            { q: "A number is increased by 20% and then decreased by 10%. Find the overall change.", options: ["8%", "9%", "10%", "11%"], answer: "8%" },
+            { q: "A salary of ₹12000 increases by 15%. Find the new salary.", options: ["₹13500", "₹13800", "₹14000", "₹14200"], answer: "₹13800" },
+            { q: "A number is decreased by 25% and then increased by 20%. Find the net change.", options: ["5% decrease", "5% increase", "10% increase", "10% decrease"], answer: "5% decrease" },
+            { q: "An item is increased by 40% and then decreased by 20%. Find the net percentage change.", options: ["12%", "14%", "16%", "18%"], answer: "12%" },
+            { q: "A sum becomes ₹17600 after increasing by 10%. Find the original sum.", options: ["₹15000", "₹16000", "₹16500", "₹17000"], answer: "₹16000" }
+        ];
+
+        function loadQuiz() {
+            const container = document.getElementById('quiz-container');
+            questions.forEach((q, index) => {
+                const div = document.createElement('div');
+                div.classList.add('question');
+                div.innerHTML = `<p><b>Q${index + 1}:</b> ${q.q}</p>` +
+                    q.options.map(opt => `<label><input type='radio' name='q${index}' value='${opt}'> ${opt}</label><br>`).join('');
+                container.appendChild(div);
+            });
+        }
+
+        function submitQuiz() {
+            let score = 0;
+            questions.forEach((q, index) => {
+                const selectedOption = document.querySelector(`input[name="q${index}"]:checked`);
+                if (selectedOption && selectedOption.value === q.answer) {
+                    score++;
+                }
+            });
+            alert(`Quiz Submitted!\nYour Score: ${score} / ${questions.length}`);
+        }
+
+        // Timer Function
+        function startTimer(duration) {
+            let timeLeft = duration * 60;
+            const timerDisplay = document.getElementById('timer');
+
+            const countdown = setInterval(() => {
+                let minutes = Math.floor(timeLeft / 60);
+                let seconds = timeLeft % 60;
+                timerDisplay.textContent = `Time Left: ${minutes}:${seconds < 10 ? '0' : ''}${seconds}`;
+                
+                if (timeLeft === 0) {
+                    clearInterval(countdown);
+                    alert("Time is up! Submitting quiz...");
+                    submitQuiz();
+                }
+                timeLeft--;
+            }, 1000);
+        }
+
+        window.onload = () => {
+            loadQuiz();
+            startTimer(40); // 40-minute timer
+        };
+    </script>
+</body>
+</html>
