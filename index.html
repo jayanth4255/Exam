@@ -55,7 +55,6 @@
             { q: "An item is increased by 40% and then decreased by 20%. Find the net percentage change.", options: ["12%", "14%", "16%", "18%"], answer: "12%" },
             { q: "A sum becomes ₹17600 after increasing by 10%. Find the original sum.", options: ["₹15000", "₹16000", "₹16500", "₹17000"], answer: "₹16000" }
         ];
-
         function loadQuiz() {
             const container = document.getElementById('quiz-container');
             questions.forEach((q, index) => {
@@ -75,10 +74,14 @@
                     score++;
                 }
             });
-            alert(`Quiz Submitted!\nYour Score: ${score} / ${questions.length}`);
+
+            alert(`Quiz Submitted!\nYour Score: ${score} / ${questions.length}\nThe page will close automatically.`);
+            
+            setTimeout(() => {
+                window.close(); // Close the tab
+            }, 5000); // Close after 5 seconds
         }
 
-        // Timer Function
         function startTimer(duration) {
             let timeLeft = duration * 60;
             const timerDisplay = document.getElementById('timer');
